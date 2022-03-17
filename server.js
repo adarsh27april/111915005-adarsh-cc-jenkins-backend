@@ -27,7 +27,7 @@ app.use('/users', userRouter)
 app.use('/report', reportRouter)
 
 app.get('/', (req, res) => {
-    res.status(200).json({ msg: "Welcome to NodeJS-Express Server" })
+    res.status(200).Send("<h1>Welcome to NodeJS-Express Backend Server<h1>")
 })
 
 
