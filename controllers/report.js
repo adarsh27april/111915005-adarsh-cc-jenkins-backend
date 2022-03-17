@@ -8,6 +8,14 @@ const addReport = async (req, res) => {
 	const { employeeID, jobRole, monthlySalary, yearlyBonus, } = req.body;
 	console.log("data received, employeeID: ", employeeID);
 
+	let employeeData = await employeeModel.findOne({ employeeID });
+	if (!employeeData) {
+		// i.e. data not found in employeeData
+		return res.status(404).json({
+			msg: `No account exists for Employee id: ${employeeID} first create an account for adding data`
+		})
+	}
+
 	let user = await salaryModel.findOne({ employeeID });
 	if (!user) {
 		user = new salaryModel({
@@ -38,10 +46,31 @@ const readReport = async (req, res) => {
 	const employeeID = req.params.employeeID;
 	// console.log(req.body.employeeID);
 
-	let user = await salaryModel.findOne({ employeeID });
-	if (user) {
-		return res.status(200).json(user)
+	let salaryData = await salaryModel.findOne({ employeeID });
+	let employeeData = await employeeModel.findOne({ employeeID });
+	console.log(employeeData);
+	console.log(salaryData);
+
+	if (!employeeData) {
+		// i.e. data not found in employeeData
+		return res.status(404).json({ msg: `No account exists for Employee id: ${employeeID}` })
 	}
+
+	if (salaryData) {
+		let data = {
+			employeeID: employeeID,
+			firstName: employeeData.firstName,
+			lastName: employeeData.lastName,
+			dateOfBirth: employeeData.dateOfBirth,
+
+			jobRole: salaryData.jobRole,
+			monthlySalary: salaryData.monthlySalary,
+			yearlyBonus: salaryData.yearlyBonus
+		}
+
+		return res.status(200).json(data);
+	}
+
 	res.status(404).json({ msg: `data not found for Employee id: ${employeeID}` })
 }
 
