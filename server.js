@@ -2,10 +2,11 @@ const morgan = require('morgan')
 require('dotenv').config()
 
 const mongoose = require('mongoose');
+// const salaryModel = require("./models/report");
 
 const express = require("express");
 const userRouter = require('./routes/_users')
-const collectionRouter = require('./routes/_collections');
+const reportRouter = require('./routes/_report')
 
 const app = express();
 const cors = require('cors');
@@ -13,8 +14,8 @@ const cors = require('cors');
 const port = process.env.client_port || 8430;
 
 //mongoDB
-const mongoURI = process.env.mongoURI || `mongodb://localhost:27017/collections`
-mongoose.connect(process.env.mongoURI);
+const mongoURI = process.env.mongoURI || `mongodb://localhost:27017/adarsh_111915005_detail`
+mongoose.connect(mongoURI);
 
 // middlewares
 app.use(morgan('dev'))
@@ -23,7 +24,8 @@ app.use(express.json())
 
 //middleware for routes => ./routes
 app.use('/users', userRouter)
-app.use('/collections', collectionRouter);
+app.use('/report', reportRouter)
+
 app.get('/', (req, res) => {
     res.status(200).json({ msg: "Welcome to NodeJS-Express Server" })
 })
